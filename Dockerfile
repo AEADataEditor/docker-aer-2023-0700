@@ -6,8 +6,8 @@ RUN Rscript setup.R
 
 # Install gurobi
 # This could be overridden when building 
-ARG GRB_VERSION=9.0.1
-ARG GRB_SHORT_VERSION=9.0
+ARG GRB_VERSION=10.0.0
+ARG GRB_SHORT_VERSION=10.0
 ARG PYTHON_VERSION=3.11 
 
 # based on https://github.com/Gurobi/docker-optimizer/blob/master/9.1.2/Dockerfile
@@ -42,7 +42,9 @@ RUN pip${PYTHON_VERSION}  install -r /opt/requirements.txt
 #run the setup
 
 WORKDIR /opt/gurobi/linux64
-RUN python${PYTHON_VERSION} setup.py install
+# RUN python${PYTHON_VERSION} setup.py install
+# For versions later than 10.0.0, this should work faster:
+RUN pip${PYTHON_VERSION}  install gurobipy==${GRB_VERSION}
 
 # Add the license key
 # Visit https://license.gurobi.com/manager/doc/overview for more information.

@@ -31,7 +31,7 @@ fi
 
 
 case $USER in
-  *vilhuber)
+  *)
   WORKSPACE=$PWD
   ;;
   codespace)

@@ -15,7 +15,7 @@ PWD=$(pwd)
 tag=${1:-$tag}
 
 case $USER in
-  *vilhuber|*herbert)
+  *)
   WORKSPACE=$PWD
   ;;
   codespace)

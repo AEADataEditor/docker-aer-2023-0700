@@ -11,7 +11,7 @@ exit 0
 fi
 
 PWD=$(pwd)
-. config.sh
+. $(dirname $0)/config.sh
 tag=${1:-$tag}
 
 case $USER in
@@ -23,9 +23,39 @@ case $USER in
   ;;
 esac
   
-# build the docker if necessary
+
+# try to pull the image
 
 docker pull $space/$repo:$tag
 
+# Licenses: this particular image wants two licenses:
+# - gurobi.lic
+# - mosek.lic
+#
+# These are expected to be in the current directory, and will be mounted into the container
 
-docker run -e DISABLE_AUTH=true -v "$WORKSPACE":/home/rstudio --rm -p 8787:8787 $space/$repo:$tag
+GUROBILIC=$PWD/gurobi.lic
+MOSEKLIC=$PWD/mosek.lic
+
+if [[ -f $GUROBILIC ]]
+then
+  echo "Found gurobi license"
+  OPTIONS="-v $GUROBILIC:/opt/gurobi/gurobi.lic $OPTIONS"
+else
+  echo "No gurobi license found"
+fi
+
+if [[ -f $MOSEKLIC ]]
+then
+  echo "Found mosek license"
+  OPTIONS="-v $MOSEKLIC:/opt/mosek/mosek.lic $OPTIONS"
+else
+  echo "No mosek license found"
+fi
+
+OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"
+
+
+docker run -e DISABLE_AUTH=true -v "$WORKSPACE":/home/rstudio $OPTIONS \
+    --rm -p 8787:8787 \
+    $space/$repo:$tag

@@ -19,7 +19,14 @@ pkgTest <- function(x,try=FALSE)
 }
 
 
-global.libraries <- c("foreign","tidyverse","REBayes")
+
+global.libraries <- c("foreign","tidyverse","REBayes","splines")
 
 results <- sapply(as.list(global.libraries), pkgTest)
 
+# install Rmosek
+
+rmosek.dir <- Sys.getenv("RMOSEKDIR")
+source(file.path(rmosek.dir,"builder.R"), echo=TRUE)
+attachbuilder()
+install.rmosek()

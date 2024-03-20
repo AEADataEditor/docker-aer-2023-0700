@@ -24,9 +24,20 @@ case $USER in
 esac
   
 
+# docker binary
+
+if [[ "${HOSTNAME:0:4}" == "cbsu" ]]
+then
+  echo "Running on CBSU"
+  DOCKER=docker1
+else
+  echo "Running on non-CBSU"
+  DOCKER=docker
+fi
+
 # try to pull the image
 
-docker pull $space/$repo:$tag
+$DOCKER pull $space/$repo:$tag
 
 # Licenses: this particular image wants two licenses:
 # - gurobi.lic
@@ -65,6 +76,6 @@ fi
 OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"
 
 
-docker run -e DISABLE_AUTH=true -v "$WORKSPACE":/home/rstudio $OPTIONS \
+$DOCKER run -e DISABLE_AUTH=true -v "$WORKSPACE":/home/rstudio $OPTIONS \
     --rm -p 8787:8787 \
     $space/$repo:$tag

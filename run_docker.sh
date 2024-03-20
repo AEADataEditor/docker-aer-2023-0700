@@ -18,6 +18,18 @@ PWD=$(pwd)
 . $(dirname $0)/config.sh
 shift
 
+# docker binary
+
+if [[ "${HOSTNAME:0:4}" == "cbsu" ]]
+then
+  echo "Running on CBSU"
+  DOCKER=docker1
+else
+  echo "Running on non-CBSU"
+  DOCKER=docker
+fi
+
+
 case $USER in
   *vilhuber)
   WORKSPACE=$PWD
@@ -29,7 +41,7 @@ esac
   
 # try to pull the image
 
-docker pull $space/$repo:$tag
+$DOCKER pull $space/$repo:$tag
 
 # Licenses: this particular image wants two licenses:
 # - gurobi.lic
@@ -68,4 +80,4 @@ fi
 OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"
 # OPTIONS="-e DISABLE_AUTH=true  --rm -p 8787:8787"
 
-docker run -v "$WORKSPACE":/home/rstudio $OPTIONS $space/$repo:$tag $@
+$DOCKER run -v "$WORKSPACE":/home/rstudio $OPTIONS $space/$repo:$tag $@

@@ -39,6 +39,7 @@ docker pull $space/$repo:$tag
 
 GUROBILIC=$PWD/gurobi.lic
 MOSEKLIC=$PWD/mosek.lic
+STATALIC=$PWD/stata.lic
 
 if [[ -f $GUROBILIC ]]
 then
@@ -54,6 +55,14 @@ then
   OPTIONS="-v $MOSEKLIC:/opt/mosek/mosek.lic $OPTIONS"
 else
   echo "No mosek license found"
+fi
+
+if [[ -f $STATALIC ]]
+then
+  echo "Found stata license"
+  OPTIONS="-v $STATALIC:/usr/local/stata/stata.lic $OPTIONS"
+else
+  echo "No stata license found"
 fi
 
 OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"

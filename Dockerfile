@@ -1,24 +1,41 @@
-ARG R_VERSION=4.3.2
-FROM rocker/verse:${R_VERSION}
+
+# syntax=docker/dockerfile:1.2
 
 # Parameters
 # This could be overridden when building 
+
+
+ARG R_TYPE=verse
+ARG R_VERSION=4.3.2
+
+ARG STATAVERSION=18-mp
+ARG STATATAG=2024-02-14
+ARG STATAHUBID=dataeditors
+
+
+## ================== Define base images =====================
+
+# define the source for Stata
+FROM ${STATAHUBID}/stata${STATAVERSION}:${STATATAG} as stata
+
+# define the source for R
+
+FROM rocker/${R_TYPE}:${R_VERSION}
+COPY --from=stata /usr/local/stata/ /usr/local/stata/
+RUN echo "export PATH=/usr/local/stata:${PATH}" >> /root/.bashrc
+ENV PATH "$PATH:/usr/local/stata" 
+
+# To run stata, you need to mount the Stata license file
+# by passing it in during runtime: -v stata.lic:/usr/local/stata/stata.lic
+
+
+# ================== Install gurobi =====================
+
 ARG GRB_VERSION=10.0.0
 ARG GRB_SHORT_VERSION=10.0
 ARG PYTHON_VERSION=3.11 
 
-ENV MOSEKLM_LICENSE_FILE=/opt/mosek/mosek.lic
-ARG MOSEK_VERSION=10.1.28
-ARG MOSEK_SHORT_VERSION=10.1
-ENV RMOSEKDIR=/opt/mosek/${MOSEK_SHORT_VERSION}/tools/platform/linux64x86/rmosek
 
-
-LABEL name="Reproducibility stack for AER-2023-0700" maintainer="dataeditor@aeapubs.org"
-LABEL description="Docker image for the reproducibility stack for AER-2023-0700"
-LABEL doi="10.1257/aer.20230700"
-
-
-# ================== Install gurobi =====================
 
 # based on https://github.com/Gurobi/docker-optimizer/blob/master/9.1.2/Dockerfile
 WORKDIR /opt
@@ -28,6 +45,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         binfmt-support \
         ca-certificates \
+        locales \
+        libncurses5 \
+        libfontconfig1 \
+        nano \
+        unzip \
         bzip2 \
         libpython${PYTHON_VERSION}-stdlib \
         python${PYTHON_VERSION} \
@@ -76,6 +98,14 @@ ENV LD_LIBRARY_PATH $GUROBI_HOME/lib
 
 ## ===================== Install MOSEK =====================
 
+
+ARG MOSEK_VERSION=10.1.28
+ARG MOSEK_SHORT_VERSION=10.1
+
+
+ENV RMOSEKDIR=/opt/mosek/${MOSEK_SHORT_VERSION}/tools/platform/linux64x86/rmosek
+ENV MOSEKLM_LICENSE_FILE=/opt/mosek/mosek.lic
+
 WORKDIR /opt
 RUN wget -v https://download.mosek.com/stable/${MOSEK_VERSION}/mosektoolslinux64x86.tar.bz2 \
     && tar -xvf mosektoolslinux64x86.tar.bz2 \
@@ -103,3 +133,12 @@ COPY setup.R .
 RUN R CMD BATCH setup.R 
 
 WORKDIR /code
+
+
+LABEL name="Reproducibility stack for AER-2023-0700" maintainer="dataeditor@aeapubs.org"
+LABEL description="Docker image for the reproducibility stack for AER-2023-0700"
+LABEL doi="10.1257/aer.20230700"
+LABEL r=${R_VERSION}
+LABEL gurobi=${GRB_VERSION}
+LABEL mosek=${MOSEK_VERSION}
+LABEL python=${PYTHON_VERSION}

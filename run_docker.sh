@@ -77,6 +77,10 @@ else
   echo "No stata license found"
 fi
 
+if [[ ! -z ${SLURM_ARRAY_JOB_ID} ]]
+then
+	OPTIONS="-e SLURM_ARRAY_JOB_ID=${SLURM_ARRAY_JOB_ID}"
+fi
 OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"
 # OPTIONS="-e DISABLE_AUTH=true  --rm -p 8787:8787"
 

@@ -1,5 +1,7 @@
 # Docker image: for aer-2023-0700 with Gurobi, Mosek, R, Python, and Stata installation
 
+All files needed to build this image are available at [AEADataEditor/docker-aer-2023-0700](https://github.com/AEADataEditor/docker-aer-2023-0700).
+
 ## Purpose
 
 This Docker image is meant to isolate and stabilize the primary environment used for the analysis in AER-2023-0700. It does not cover all software packages (MATLAB is missing), and it is not optimized for compute speed, only for portability.

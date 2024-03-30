@@ -73,7 +73,7 @@ else
   echo "No stata license found"
 fi
 
-OPTIONS="-it --rm --entrypoint /bin/bash -w /home/rstudio $OPTIONS"
+OPTIONS="--rm  -w /home/rstudio $OPTIONS"
 
 
 $DOCKER run -e DISABLE_AUTH=true -v "$WORKSPACE":/home/rstudio $OPTIONS \

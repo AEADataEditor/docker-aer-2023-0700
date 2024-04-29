@@ -57,11 +57,11 @@ docker pull ${space}/${repo}:${tag}
 
 #### If using Zenodo 
 
-The image was preserved on Zenodo at [10.5281/zenodo.11088451](https://doi.org/10.5281/zenodo.11088451), and can be obtained from there. 
+The image was preserved on Zenodo at [10.5281/zenodo.11080918](https://doi.org/10.5281/zenodo.11080918), and can be obtained from there. 
 
 ```
-wget https://zenodo.org/record/11088451/files/${repo}_${tag}.tar
-docker load -i ${repo}_${tag}.tar
+wget https://zenodo.org/record/11080918/files/${repo}-save.${tag}.tar
+docker load -i ${repo}-save.${tag}.tar
 ```
 
 
@@ -165,7 +165,7 @@ To export the image, use
 
 ```
 source config.sh
-docker save -o ${repo}_${tag}.tar ${space}/${repo}:${tag}
+docker save -o ${repo}-save.${tag}.tar ${space}/${repo}:${tag}
 ```
 
 ## License

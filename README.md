@@ -31,7 +31,7 @@ Copy all three license files into the current directory. The `run_docker.sh` scr
 
 ### Setup info
 
-Set the `TAG` and `IMAGEID` accordingly.
+Set the `tag` and `repo` accordingly.
 
 ```
 tag=2024-03-30
@@ -60,8 +60,8 @@ docker pull ${space}/${repo}:${tag}
 The image was preserved on Zenodo at [10.5281/zenodo.11088451](https://doi.org/10.5281/zenodo.11088451), and can be obtained from there. 
 
 ```
-wget https://zenodo.org/record/11088451/files/${repo}-${tag}.tar
-docker load -i ${repo}-${tag}.tar
+wget https://zenodo.org/record/11088451/files/${repo}_${tag}.tar
+docker load -i ${repo}_${tag}.tar
 ```
 
 

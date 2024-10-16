@@ -49,7 +49,7 @@ source config.sh
 
 #### Docker Hub
 
-If using a pre-built image on [Docker Hub](https://hub.docker.com/repository/docker/aeadataeditor/), 
+If using a pre-built image on [Docker Hub](https://hub.docker.com/r/aeadataeditor/aer-2023-0700), 
 
 ```
 docker pull ${space}/${repo}:${tag}
